@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <MultiStepForm msg="Welcome to Your Vue.js App" />
+    <MultiStepForm />
   </div>
 </template>
 
@@ -15,3 +15,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.home {
+  border: solid 2px red;
+  height: 100vh;
+  display: grid;
+  align-items: center;
+}
+</style>

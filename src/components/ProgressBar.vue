@@ -10,7 +10,7 @@
         aria-valuemax="100"
       ></div>
     </div>
-    <div class="progress_bar_label text-end col-3">{{ qtd }} de 2</div>
+    <div class="progress-bar-label text-end col-3">{{ qtd }} de 2</div>
   </div>
 </template>
 
@@ -28,4 +28,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.progress-bar {
+  background: var(--primary);
+
+  &-label {
+    color: var(--primary);
+    font-weight: bold;
+  }
+}
+</style>
