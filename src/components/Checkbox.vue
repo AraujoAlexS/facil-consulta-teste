@@ -3,6 +3,7 @@
     <input
       class="form-check-input"
       type="checkbox"
+      :checked="checked"
       :value="this.value"
       :id="this.id"
     />
@@ -17,6 +18,7 @@ export default {
     id: String,
     value: String,
     label: String,
+    checked: Boolean,
   },
 };
 </script>

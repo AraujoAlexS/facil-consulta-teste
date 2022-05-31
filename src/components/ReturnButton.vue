@@ -1,5 +1,5 @@
 <template>
-  <button class="btn my-4" @click="$store.commit('decreaseFildset')">
+  <button class="btn my-4" @click="$store.commit('decreaseFildset', 1)">
     &#10094;
   </button>
 </template>

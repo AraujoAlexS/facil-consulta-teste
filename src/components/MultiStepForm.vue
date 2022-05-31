@@ -10,6 +10,7 @@
             <div class="mb-4">
               <label for="nome" class="form-label"> Nome completo* </label>
               <input
+                v-model="nome"
                 type="text"
                 class="form-control col-sm-10"
                 id="nome"
@@ -32,6 +33,7 @@
             <div class="my-4 d-grid col-10">
               <label for="celular" class="form-label"> Número celular* </label>
               <input
+                v-model="celular"
                 type="text"
                 class="form-control"
                 id="celular"
@@ -44,12 +46,12 @@
               <div class="d-flex flex-column col-sm">
                 <label for="estado" class="form-label"> Estado* </label>
                 <select
+                  v-model="estado"
                   name="estado"
                   id="estado"
                   class="form-select"
                   @change="getCities($event.target.value)"
                 >
-                  <option value="#" selected>Selecione</option>
                   <option
                     v-for="item in states"
                     :key="item.id"
@@ -62,8 +64,12 @@
               </div>
               <div class="d-flex flex-column col-sm">
                 <label for="cidade" class="form-label"> Cidade* </label>
-                <select name="cidade" id="cidade" class="form-select">
-                  <option value="#" selected>Selecione</option>
+                <select
+                  v-model="cidade"
+                  name="cidade"
+                  id="cidade"
+                  class="form-select"
+                >
                   <option
                     v-for="item in cities"
                     :key="item.id"
@@ -90,8 +96,11 @@
               <label for="especialidade" class="form-label">
                 Especialidade*
               </label>
-              <select class="form-select" id="especialidade">
-                <option value="#">Selecione</option>
+              <select
+                v-model="especialidade"
+                class="form-select"
+                id="especialidade"
+              >
                 <option
                   v-for="item in specialties"
                   :key="item.id"
@@ -110,17 +119,31 @@
                 <span class="input-group-text text-white" id="basic-addon1">
                   R$
                 </span>
-                <input type="text" class="form-control" id="preco" />
+                <input
+                  v-model="preco"
+                  type="text"
+                  class="form-control"
+                  id="preco"
+                  @keydown="priceKeydown($event)"
+                />
               </div>
               <span class="validation" id="preco-validation"></span>
             </div>
             <h6>Formas de pagamento*</h6>
             <Checkbox
+              :checked="isDinheiroChecked"
               :id="'dinheiro'"
               :label="'Em dinheiro'"
               :value="'Em dinheiro'"
+              @click="isDinheiroChecked = !isDinheiroChecked"
             />
-            <Checkbox :id="'pix'" :label="'Pix'" :value="'Pix'" />
+            <Checkbox
+              :checked="isPixChecked"
+              :id="'pix'"
+              :label="'Pix'"
+              :value="'Pix'"
+              @click="isPixChecked = !isPixChecked"
+            />
             <div class="checkbox">
               <div class="form-check my-3 px-5 py-3">
                 <input
@@ -224,14 +247,20 @@
               <span class="label fw-bold">Formas de pagamento da consulta</span>
               <span
                 class="info"
-                v-for="item in $store.state.physicianInfo.pagamento.filter(
-                  (i) => i
-                )"
+                v-for="item in $store.state.physicianInfo.pagamento"
                 :key="item"
                 >{{ item }}</span
               >
             </p>
-            <router-link to="/about_copy">About copy</router-link>
+            <router-link to="/about_copy" class="router-link btn"
+              >Cadastrar profissional</router-link
+            >
+            <button
+              class="btn edit-cadastro"
+              @click="$store.commit('decreaseFildset', 2)"
+            >
+              Editar cadastro
+            </button>
           </div>
           <Image :src="'desktop-pagina-3.png'" />
         </div>
@@ -262,11 +291,25 @@ export default {
       states: null,
       cities: null,
       specialties: null,
-      cpf: "",
+      nome: this.$store.state.physicianInfo.nome,
+      cpf: this.$store.state.physicianInfo.cpf,
+      celular: this.$store.state.physicianInfo.celular,
+      estado: this.$store.state.physicianInfo.estado,
+      cidade: this.$store.state.physicianInfo.cidade,
+      especialidade: this.$store.state.physicianInfo.especialidade,
+      preco: this.$store.state.physicianInfo.preco,
+      isDinheiroChecked: false,
+      isPixChecked: false,
     };
   },
   directives: { mask },
   methods: {
+    priceKeydown(e) {
+      console.log(e.key);
+      if (!/\d|,|Backspace/.test(e.key)) {
+        e.preventDefault();
+      }
+    },
     validateName() {
       const name = document.getElementById("nome");
       const validation = document.getElementById("nome-validation");
@@ -385,7 +428,7 @@ export default {
       dinheiro = dinheiro.checked ? dinheiro.value : "";
       credito = credito.checked ? credito.value + " " + parcelas.value : "";
 
-      return [pix, dinheiro, credito];
+      return { pix, dinheiro, credito };
     },
     validatePageOne() {
       const nome = this.validateName();
@@ -527,5 +570,26 @@ select {
 }
 .collapse {
   margin-left: 80px;
+}
+
+.router-link,
+.edit-cadastro {
+  background: var(--secondary);
+  padding: 5px;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 20px;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.edit-cadastro {
+  color: var(--primary);
+  background: white;
 }
 </style>
