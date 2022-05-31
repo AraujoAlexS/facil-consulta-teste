@@ -2,7 +2,8 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    fieldset: 2,
+    fieldset: 1,
+    physicianInfo: {},
   },
   mutations: {
     increaseFieldset(state) {
@@ -10,6 +11,12 @@ export default createStore({
     },
     decreaseFildset(state) {
       state.fieldset--;
+    },
+    addPhysicianInfo(state, info) {
+      state.physicianInfo = {
+        ...state.physicianInfo,
+        ...info,
+      };
     },
   },
   actions: {},

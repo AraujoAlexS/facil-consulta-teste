@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home border">
     <MultiStepForm />
   </div>
 </template>
@@ -18,8 +18,8 @@ export default {
 
 <style lang="scss">
 .home {
-  border: solid 2px red;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   display: grid;
   align-items: center;
 }

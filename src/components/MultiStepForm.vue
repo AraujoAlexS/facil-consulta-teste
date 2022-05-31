@@ -1,22 +1,30 @@
 <template>
   <div class="prime-container container-lg">
+    <ReturnButton v-if="$store.state.fieldset > 1" />
     <form action="#">
       <fieldset class="fs p-3" v-if="$store.state.fieldset === 1">
-        <div class="row border">
+        <div class="row">
           <div class="col-12 col-md-6">
             <h1 class="fs_title">Sobre o profissional</h1>
             <h2 class="fs_sub_title">Dados do profissional</h2>
             <div class="mb-4">
               <label for="nome" class="form-label"> Nome completo* </label>
-              <input type="text" class="form-control col-sm-10" id="nome" />
+              <input
+                type="text"
+                class="form-control col-sm-10"
+                id="nome"
+                placeholder="João dos Santos Silva"
+              />
               <span class="validation" id="nome-validation"></span>
             </div>
             <div class="mb-4 d-grid col-10">
               <label for="cpf" class="form-label"> CPF* </label>
               <input
+                v-model="cpf"
                 type="text"
                 class="form-control"
                 id="cpf"
+                placeholder="123.456.789-00"
                 v-mask="'###.###.###-##'"
               />
               <span class="validation" id="cpf-validation"></span>
@@ -27,6 +35,7 @@
                 type="text"
                 class="form-control"
                 id="celular"
+                placeholder="(00) 91234-5678"
                 v-mask="['(##) #####-####', '(##) ####-####']"
               />
               <span class="validation" id="celular-validation"></span>
@@ -58,7 +67,7 @@
                   <option
                     v-for="item in cities"
                     :key="item.id"
-                    :value="item.id"
+                    :value="item.nome"
                   >
                     {{ item.nome }}
                   </option>
@@ -68,12 +77,11 @@
             </div>
             <ProgressBar :qtd="1" />
             <Button @click="validatePageOne" />
-            <!--@click="$store.commit('increaseFieldset')"-->
           </div>
           <Image :src="'desktop-pagina-1.png'" />
         </div>
       </fieldset>
-      <fieldset class="fs border p-3" v-if="$store.state.fieldset === 2">
+      <fieldset class="fs p-3" v-if="$store.state.fieldset === 2">
         <div class="row">
           <div class="col-12 col-md-6">
             <h1 class="fs_title">Sobre o atendimento</h1>
@@ -87,11 +95,12 @@
                 <option
                   v-for="item in specialties"
                   :key="item.id"
-                  :value="item.id"
+                  :value="item.nome"
                 >
                   {{ item.nome }}
                 </option>
               </select>
+              <span class="validation" id="especialidade-validation"></span>
             </div>
             <div class="my-4">
               <label for="preco" class="form-label">
@@ -103,88 +112,125 @@
                 </span>
                 <input type="text" class="form-control" id="preco" />
               </div>
+              <span class="validation" id="preco-validation"></span>
             </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="dinheiro"
-                id="dinheiro"
-              />
-              <label class="form-check-label" for="dinheiro">
-                Em dinheiro
-              </label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="pix"
-                id="pix"
-              />
-              <label class="form-check-label" for="pix"> Pix </label>
-            </div>
-            <div class="form-check">
-              <input
-                data-bs-toggle="collapse"
-                href="#creditoCollapse"
-                aria-expanded="false"
-                aria-controls="creditoCollapse"
-                class="form-check-input"
-                type="checkbox"
-                value="credito"
-                id="credito"
-              />
-              <label class="form-check-label" for="credito">
-                Cartão de crédito
-              </label>
-            </div>
-            <div class="collapse" id="creditoCollapse">
-              <p class="mt-2">Parcelamento em</p>
-              <div class="form-check">
+            <h6>Formas de pagamento*</h6>
+            <Checkbox
+              :id="'dinheiro'"
+              :label="'Em dinheiro'"
+              :value="'Em dinheiro'"
+            />
+            <Checkbox :id="'pix'" :label="'Pix'" :value="'Pix'" />
+            <div class="checkbox">
+              <div class="form-check my-3 px-5 py-3">
                 <input
+                  data-bs-toggle="collapse"
+                  href="#creditoCollapse"
+                  aria-expanded="false"
+                  aria-controls="creditoCollapse"
                   class="form-check-input"
-                  type="radio"
-                  name="qtd_vezes"
-                  id="uma_vez"
+                  type="checkbox"
+                  value="Credito"
+                  id="credito"
                 />
-                <label class="form-check-label" for="uma_vez">
-                  1x, sem juros
+                <label class="form-check-label checkbox-label" for="credito">
+                  Cartão de crédito
                 </label>
               </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="qtd_vezes"
-                  id="duas_vez"
-                />
-                <label class="form-check-label" for="duas_vez">
-                  2x, sem juros
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="qtd_vezes"
-                  id="tres_vez"
-                />
-                <label class="form-check-label" for="tres_vez">
-                  3x, sem juros
-                </label>
+              <div class="collapse pb-3" id="creditoCollapse">
+                <p class="mt-2">Parcelamento em</p>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="qtd_vezes"
+                    id="uma"
+                    value="1x, sem juros"
+                  />
+                  <label class="form-check-label" for="uma_vez">
+                    1x, sem juros
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="qtd_vezes"
+                    id="duas"
+                    value="2x, sem juros"
+                  />
+                  <label class="form-check-label" for="duas_vez">
+                    2x, sem juros
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="qtd_vezes"
+                    id="tres"
+                    value="3x, sem juros"
+                  />
+                  <label class="form-check-label" for="tres_vez">
+                    3x, sem juros
+                  </label>
+                </div>
               </div>
             </div>
+            <span class="validation" id="pagamento-validation"></span>
             <ProgressBar :qtd="2" />
-            <Button />
+            <Button @click="validatePageTwo" />
           </div>
           <Image :src="'desktop-pagina-2.png'" />
         </div>
       </fieldset>
-      <fieldset class="fs border p-3" v-if="$store.state.fieldset === 3">
+      <fieldset class="fs p-3" v-if="$store.state.fieldset === 3">
         <div class="row">
-          <div class="col-12 col-md-6">
-            <h1 class="fs_title"></h1>
+          <div class="col-12 col-md-6 px-5">
+            <h1 class="fs_title">Revisão do cadastro</h1>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Nome completo</span
+              ><span class="info">{{ $store.state.physicianInfo.nome }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">CPF</span
+              ><span class="info">{{ $store.state.physicianInfo.cpf }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Número de telefone ou celular</span
+              ><span class="info">{{
+                $store.state.physicianInfo.celular
+              }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Estado</span
+              ><span class="info">{{ $store.state.physicianInfo.estado }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Cidade</span
+              ><span class="info">{{ $store.state.physicianInfo.cidade }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Especialidade principal</span
+              ><span class="info">{{
+                $store.state.physicianInfo.especialidade
+              }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Preco da consulta</span
+              ><span class="info">{{ $store.state.physicianInfo.preco }}</span>
+            </p>
+            <p class="info-field d-grid py-1">
+              <span class="label fw-bold">Formas de pagamento da consulta</span>
+              <span
+                class="info"
+                v-for="item in $store.state.physicianInfo.pagamento.filter(
+                  (i) => i
+                )"
+                :key="item"
+                >{{ item }}</span
+              >
+            </p>
             <router-link to="/about_copy">About copy</router-link>
           </div>
           <Image :src="'desktop-pagina-3.png'" />
@@ -197,7 +243,9 @@
 <script>
 import ProgressBar from "./ProgressBar.vue";
 import Button from "./Button.vue";
+import ReturnButton from "./ReturnButton.vue";
 import Image from "./Image.vue";
+import Checkbox from "./Checkbox.vue";
 import { mask } from "../../node_modules/vue-the-mask";
 import axios from "axios";
 export default {
@@ -206,12 +254,15 @@ export default {
     ProgressBar,
     Button,
     Image,
+    Checkbox,
+    ReturnButton,
   },
   data() {
     return {
       states: null,
       cities: null,
       specialties: null,
+      cpf: "",
     };
   },
   directives: { mask },
@@ -235,7 +286,7 @@ export default {
         return false;
       }
 
-      return true;
+      return name.value;
     },
     validateCPF() {
       const cpf = document.getElementById("cpf");
@@ -245,7 +296,7 @@ export default {
       if (!regex.test(cpf.value)) {
         validation.innerText = "CPF inválido";
       }
-      return true;
+      return cpf.value;
     },
     validatePhone() {
       const phone = document.getElementById("celular");
@@ -256,7 +307,7 @@ export default {
         validation.innerText = "Número de tefefone inválido";
         return false;
       }
-      return true;
+      return phone.value;
     },
     validadeState() {
       const state = document.getElementById("estado");
@@ -267,7 +318,7 @@ export default {
         return false;
       }
 
-      return true;
+      return state.options[state.selectedIndex].text;
     },
     validadeCity() {
       const city = document.getElementById("cidade");
@@ -278,7 +329,63 @@ export default {
         return false;
       }
 
-      return true;
+      return city.value;
+    },
+    validateSpecialty() {
+      const specialty = document.getElementById("especialidade");
+      const validation = document.getElementById("especialidade-validation");
+
+      if (specialty.value === "#") {
+        validation.innerText = "Selecione uma especialidade";
+        return false;
+      }
+
+      return specialty.value;
+    },
+    validatePrice() {
+      let price = document.getElementById("preco");
+      const validation = document.getElementById("preco-validation");
+
+      if (price.value.length === 0) {
+        validation.innerText = "Informe um valor";
+        return false;
+      }
+
+      price = parseFloat(price.value.replace(",", "."));
+
+      if (price < 30) {
+        validation.innerText = "Valor mínimo 30,00";
+        return false;
+      }
+
+      if (price > 350) {
+        validation.innerText = "Valor máximo 350,00";
+        return false;
+      }
+
+      return price;
+    },
+    validatePayment() {
+      let pix = document.getElementById("pix");
+      let dinheiro = document.getElementById("dinheiro");
+      let credito = document.getElementById("credito");
+      let parcelas = document.querySelector('input[type="radio"]:checked');
+      const validation = document.getElementById("pagamento-validation");
+
+      if (!pix.checked && !dinheiro.checked && !credito.checked) {
+        validation.innerText = "Selecione ao menos uma forma de pagamento";
+        return false;
+      }
+
+      if (credito.checked && !parcelas) {
+        validation.innerText = "Selecione uma das opções de parcelamento";
+        return false;
+      }
+      pix = pix.checked ? pix.value : "";
+      dinheiro = dinheiro.checked ? dinheiro.value : "";
+      credito = credito.checked ? credito.value + " " + parcelas.value : "";
+
+      return [pix, dinheiro, credito];
     },
     validatePageOne() {
       const nome = this.validateName();
@@ -288,6 +395,27 @@ export default {
       const cidade = this.validadeCity();
 
       if (nome && cpf && celular && estado && cidade) {
+        this.$store.commit("addPhysicianInfo", {
+          nome,
+          cpf,
+          celular,
+          estado,
+          cidade,
+        });
+        this.$store.commit("increaseFieldset");
+      }
+    },
+    validatePageTwo() {
+      const especialidade = this.validateSpecialty();
+      const preco = this.validatePrice();
+      const pagamento = this.validatePayment();
+
+      if (especialidade && preco && pagamento) {
+        this.$store.commit("addPhysicianInfo", {
+          especialidade,
+          preco,
+          pagamento,
+        });
         this.$store.commit("increaseFieldset");
       }
     },
@@ -297,9 +425,9 @@ export default {
       );
       return res.data;
     },
-    async getCities(value) {
+    async getCities(stateId) {
       const res = await axios(
-        `https://api-teste-front-end-fc.herokuapp.com/estados/${value}/cidades`
+        `https://api-teste-front-end-fc.herokuapp.com/estados/${stateId}/cidades`
       );
       this.cities = res.data;
     },
@@ -309,10 +437,31 @@ export default {
       );
       return res.data;
     },
+    async getCPF(cpf) {
+      const res = await axios(
+        `https://api-teste-front-end-fc.herokuapp.com/profissionais?cpf=${cpf}`
+      );
+      return res.data;
+    },
   },
   async mounted() {
     this.states = await this.getStates();
     this.specialties = await this.getSpecialties();
+  },
+  watch: {
+    cpf: {
+      handler: async function (value) {
+        if (value.length === 14) {
+          const a = await this.getCPF(value.replace(/\.|-/g, ""));
+          const validation = document.getElementById("cpf-validation");
+          if (a.length > 0) {
+            validation.innerText = "CPF já cadastrado";
+          } else {
+            validation.innerText = "";
+          }
+        }
+      },
+    },
   },
 };
 </script>
@@ -320,11 +469,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .prime-container {
-  border: solid 1px black;
+  position: relative;
   max-width: 900px;
   padding: 0 !important;
 }
 .fs {
+  position: relative;
   background: white;
   border-radius: 40px;
   box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
@@ -365,5 +515,17 @@ select {
   font-size: 12px;
   padding: 2px;
   color: red;
+}
+
+.checkbox {
+  background: rgb(245, 245, 245);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-label {
+  margin-left: 30px;
+}
+.collapse {
+  margin-left: 80px;
 }
 </style>

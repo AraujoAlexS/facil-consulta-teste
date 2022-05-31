@@ -26,7 +26,7 @@
   color: #2c3e50;
   background: var(--secondary);
   width: 100vw;
-  height: 100vh;
+  height: auto;
   position: relative;
   text-align: left !important;
 }

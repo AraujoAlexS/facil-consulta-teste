@@ -1,6 +1,8 @@
 <template>
-  <div class="col-md-6 d-none d-lg-block d-md-block">
-    <img class="img-fluid" :src="require('@/assets/' + src)" alt="" />
+  <div class="wrapper col-md-6 d-none d-lg-block d-md-block">
+    <div class="center">
+      <img class="img-fluid" :src="require('@/assets/' + src)" alt="" />
+    </div>
   </div>
 </template>
 
@@ -16,5 +18,13 @@ export default {
 <style lang="scss" scoped>
 img {
   margin-top: 20%;
+}
+.wrapper {
+  position: relative;
+}
+.center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-60%);
 }
 </style>
