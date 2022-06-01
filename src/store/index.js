@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    fieldset: 3,
+    fieldset: 1,
     physicianInfo: {},
   },
   mutations: {

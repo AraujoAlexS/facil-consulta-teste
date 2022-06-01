@@ -1,5 +1,18 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="main border">
+    <DisplayCard />
   </div>
 </template>
+
+<script>
+import DisplayCard from "@/components/DisplayCard.vue";
+
+export default {
+  name: "About",
+  components: {
+    DisplayCard,
+  },
+};
+</script>
+
+<style lang="scss" scoped></style>

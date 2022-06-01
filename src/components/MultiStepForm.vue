@@ -252,7 +252,7 @@
                 >{{ item }}</span
               >
             </p>
-            <router-link to="/about_copy" class="router-link btn"
+            <router-link to="/about" class="router-link btn"
               >Cadastrar profissional</router-link
             >
             <button
@@ -356,7 +356,7 @@ export default {
       const state = document.getElementById("estado");
       const validation = document.getElementById("estado-validation");
 
-      if (state.value === "#") {
+      if (!state.value) {
         validation.innerText = "Selecione um estado";
         return false;
       }
@@ -367,7 +367,7 @@ export default {
       const city = document.getElementById("cidade");
       const validation = document.getElementById("cidade-validation");
 
-      if (city.value === "#") {
+      if (!city.value) {
         validation.innerText = "Selecione um cidade";
         return false;
       }
